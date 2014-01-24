@@ -1,9 +1,9 @@
 {
-    "versionLabel": "0.5.3",
+    "versionLabel": "0.6",
     "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
     "appKeys": {},
     "longName": "Learning the SDK",
-    "versionCode": 10,
+    "versionCode": 11,
     "capabilities": [
         ""
     ],
