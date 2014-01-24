@@ -1,0 +1,35 @@
+{
+    "versionLabel": "0.5.3",
+    "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
+    "appKeys": {},
+    "longName": "Learning the SDK",
+    "versionCode": 10,
+    "capabilities": [
+        ""
+    ],
+    "shortName": "Future & Past",
+    "companyName": "edwin",
+    "watchapp": {
+        "watchface": true
+    },
+    "resources": {
+        "media": [
+            {
+                "menuIcon": true,
+                "type": "png",
+                "name": "MENU_ICON",
+                "file": "images/menu_icon.png"
+            },
+            {
+                "type": "png",
+                "name": "PAST",
+                "file": "images/past1.png"
+            },
+            {
+                "type": "png",
+                "name": "FUTURE",
+                "file": "images/future1.png"
+            }
+        ]
+    }
+}
