@@ -16,21 +16,21 @@ So please ignore/delete the lines that contain stuff about the date
 Window* window;
 TextLayer *text_layer;
 TextLayer *battery_text_layer;
-							//TextLayer* date_text_layer;
+TextLayer* date_text_layer;
 static GFont trek20;
 
 static GBitmap* bt_connected;
 static BitmapLayer* bt_connected_layer;
 
 char timeBuffer[] = "00:00";
-char dateBuffer[] = "14 August";
+char dateBuffer[] = "January 25";
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
   //Format the Time buffer string using tick_time as the time source
   strftime(timeBuffer, sizeof("00:00"), "%H:%M", tick_time);
   //Format dateBuffer using tick_time as source
- // strftime(dateBuffer, sizeof(dateBuffer), "%e %b", tick_time);
+  strftime(dateBuffer, sizeof(dateBuffer), "%B %e", tick_time);
 	
 	if(clock_is_24h_style()){
       strftime(timeBuffer, sizeof(timeBuffer), "%H:%M", tick_time);
@@ -41,7 +41,7 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 	
   //Change the TextLayer(s) text to show the new time and date
   text_layer_set_text(text_layer, timeBuffer);
-  							//text_layer_set_text(date_text_layer, dateBuffer);
+  text_layer_set_text(date_text_layer, dateBuffer);
 }
  
 void handle_bt(bool connected){
@@ -81,13 +81,11 @@ void window_load(Window *window)
   layer_add_child(window_get_root_layer(window), (Layer*) text_layer);
 	
   //Date layer (work in progress)
-  /*
-  date_text_layer = text_layer_create(GRect(120,0,40,40));
-  text_layer_set_font(date_text_layer,trek20);
-  text_layer_set_background_color(date_text_layer, GColorBlack);
-  text_layer_set_text_color(date_text_layer, GColorWhite);
+  date_text_layer = text_layer_create(GRect(25,97,150,140));
+  text_layer_set_font(date_text_layer,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+  text_layer_set_background_color(date_text_layer, GColorClear);
+  text_layer_set_text_color(date_text_layer, GColorBlack);
   layer_add_child(window_layer, text_layer_get_layer(date_text_layer));
-  */
 	
   //Battery text layer
   battery_text_layer = text_layer_create(GRect(0,145,40,40));
@@ -125,7 +123,7 @@ void window_unload(Window *window)
 {
   //Destroy elements
   text_layer_destroy(text_layer);
-  								//text_layer_destroy(date_text_layer);
+  text_layer_destroy(date_text_layer);
   text_layer_destroy(battery_text_layer);
   fonts_unload_custom_font(trek20);
   bitmap_layer_destroy(bt_connected_layer);

@@ -1,9 +1,9 @@
 {
-    "versionLabel": "0.7.2",
+    "versionLabel": "0.8",
     "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
     "appKeys": {},
     "longName": "Clean with Bluetooth & Battery",
-    "versionCode": 12,
+    "versionCode": 13,
     "capabilities": [
         ""
     ],
