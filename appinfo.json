@@ -1,13 +1,13 @@
 {
-    "versionLabel": "0.6",
+    "versionLabel": "0.7.1",
     "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
     "appKeys": {},
-    "longName": "Learning the SDK",
-    "versionCode": 11,
+    "longName": "Clean with Bluetooth & Battery",
+    "versionCode": 12,
     "capabilities": [
         ""
     ],
-    "shortName": "Future & Past",
+    "shortName": "Clean",
     "companyName": "edwin",
     "watchapp": {
         "watchface": true
@@ -15,20 +15,25 @@
     "resources": {
         "media": [
             {
+                "type": "png",
+                "name": "bt_disconnected",
+                "file": "images/bt_disconnected.png"
+            },
+            {
+                "type": "png",
+                "name": "bt_connected",
+                "file": "images/bt_connected.png"
+            },
+            {
+                "type": "font",
+                "name": "trekfont_20",
+                "file": "fonts/trek.ttf"
+            },
+            {
                 "menuIcon": true,
                 "type": "png",
                 "name": "MENU_ICON",
                 "file": "images/menu_icon.png"
-            },
-            {
-                "type": "png",
-                "name": "PAST",
-                "file": "images/past1.png"
-            },
-            {
-                "type": "png",
-                "name": "FUTURE",
-                "file": "images/future1.png"
             }
         ]
     }
