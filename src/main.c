@@ -5,10 +5,6 @@ Open source
 Feel free to modify, redistribute and do whatever you'd like with it :)
 
 Trek font taken from PebbleTrek by Kyle Potts: https://github.com/kylepotts/pebbletrek
-
-Note:
-I was in the middle of working on adding the date when I added 12/24hr functionality
-So please ignore/delete the lines that contain stuff about the date
 */
 
 #include <pebble.h>
@@ -24,6 +20,33 @@ static BitmapLayer* bt_connected_layer;
 
 char timeBuffer[] = "00:00";
 char dateBuffer[] = "January 25";
+
+void on_animation_stopped(Animation *anim, bool finished, void *context)
+{
+    //Free the memoery used by the Animation
+    property_animation_destroy((PropertyAnimation*) anim);
+}
+ 
+void animate_layer(Layer *layer, GRect *start, GRect *finish, int duration, int delay)
+{
+    //Declare animation
+    PropertyAnimation *anim = property_animation_create_layer_frame(layer, start, finish);
+     
+    //Set characteristics
+    animation_set_duration((Animation*) anim, duration);
+    animation_set_delay((Animation*) anim, delay);
+     
+    //Set stopped handler to free memory
+    AnimationHandlers handlers = {
+        //The reference to the stopped handler is the only one in the array
+        .stopped = (AnimationStoppedHandler) on_animation_stopped
+    };
+    animation_set_handlers((Animation*) anim, handlers, NULL);
+     
+    //Start animation
+    animation_schedule((Animation*) anim);
+}
+
 
 void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -42,6 +65,33 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
   //Change the TextLayer(s) text to show the new time and date
   text_layer_set_text(text_layer, timeBuffer);
   text_layer_set_text(date_text_layer, dateBuffer);
+	
+  int seconds = tick_time->tm_sec;
+        
+	if(seconds == 59)
+        {
+          //Slide offscreen to the right
+          GRect start = GRect(0, 53, 140, 168);
+          GRect finish = GRect(0, 168, 140, 168);
+          animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+        }
+        
+    else if(seconds == 0)
+        {
+          //Change the TextLayer text to show the new time!
+          text_layer_set_text(text_layer, timeBuffer);
+
+          //Slide onscreen from the left
+          GRect start = GRect(-144, 53, 140, 168);
+          GRect finish = GRect(0, 53, 140, 168);
+          animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+        }
+        
+    else
+        {
+          //Change the TextLayer text to show the new time!
+          text_layer_set_text(text_layer, timeBuffer);
+        }
 }
  
 void handle_bt(bool connected){
@@ -139,10 +189,11 @@ void init()
   .unload = window_unload,
   });
         
-  tick_timer_service_subscribe(MINUTE_UNIT, (TickHandler) tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, (TickHandler) tick_handler);
   battery_state_service_subscribe(&handle_battery);
   window_stack_push(window, true);
   bluetooth_connection_service_subscribe(&handle_bt);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
 }
  
 void deinit()
