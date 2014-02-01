@@ -8,18 +8,25 @@ Trek font taken from PebbleTrek by Kyle Potts: https://github.com/kylepotts/pebb
 */
 
 #include <pebble.h>
- 
+#define NUM_ANIMATION_PKEY 1
+#define NUM_ANIMATION_DEFAULT 0
+	
 Window* window;
 TextLayer *text_layer;
 TextLayer *battery_text_layer;
 TextLayer* date_text_layer;
+InverterLayer *invert_layer;
 static GFont trek20;
 
-static GBitmap* bt_connected;
-static BitmapLayer* bt_connected_layer;
+GBitmap* bt_connected;
+BitmapLayer* bt_connected_layer;
 
 char timeBuffer[] = "00:00";
-char dateBuffer[] = "January 25";
+char dateBuffer[] = "February 31";
+
+//Define our variables for persistent storage
+static int num_animation = NUM_ANIMATION_PKEY;
+//This is an int and not a bool because I'll be adding more colourschemes
 
 void on_animation_stopped(Animation *anim, bool finished, void *context)
 {
@@ -70,21 +77,108 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
         
 	if(seconds == 59)
         {
-          //Slide offscreen to the right
+		  srand(time(NULL));
+		  int whichAnimationTime = rand() % 5;
+		
+		
+		if(whichAnimationTime == 1){
+          //Slide offscreen downward
           GRect start = GRect(0, 53, 140, 168);
           GRect finish = GRect(0, 168, 140, 168);
           animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 2){
+			//Slide offscreen upward
+			GRect start = GRect(0, 53, 140, 168);
+          	GRect finish = GRect(0, -168, 140, 168);
+          	animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 3){
+			//Slide off to the left
+		    GRect start = GRect(0, 53, 140, 168);
+            GRect finish = GRect(-200, 53, 140, 168);
+            animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 4){
+			//Slide off to the right
+			GRect start = GRect(0, 53, 140, 168);
+			GRect finish = GRect(300, 53, 140, 168);
+            animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 5){
+			//Slide out diagonally 
+			GRect start = GRect(0, 53, 140, 168);
+			GRect finish = GRect(-200, -153, 140, 168);
+            animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else{
+			//Slide out diagonally (this is incase rand() bugs out)
+			GRect start = GRect(0, 53, 140, 168);
+			GRect finish = GRect(300, 350, 140, 168);
+            animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		/*
+		GRect start = GRect(0, 53, 140, 168);
+  		GRect finish = GRect(300, 250, 140, 168);
+  		GRect start1 = GRect(25, 97, 150, 140);
+  		GRect finish1 = GRect(-300, 250, 140, 168);
+  		GRect start2 = GRect(0, 145, 40, 40);
+ 		GRect finish2 = GRect(300,-250, 40, 40);
+ 		GRect start3 = GRect(115, 135, 40, 40);
+  		GRect finish3 = GRect(-300, -250, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+		*/
+		
         }
         
     else if(seconds == 0)
         {
-          //Change the TextLayer text to show the new time!
           text_layer_set_text(text_layer, timeBuffer);
-
-          //Slide onscreen from the left
+		
+		srand(time(NULL));
+		  int whichAnimationTime = rand() % 3;
+		
+		if(whichAnimationTime == 1){
+	      //Slide onscreen from the left
           GRect start = GRect(-144, 53, 140, 168);
           GRect finish = GRect(0, 53, 140, 168);
           animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 2){
+			//Slide onscreen from the right
+		  GRect start = GRect(200, 53, 140, 168);
+          GRect finish = GRect(0, 53, 140, 168);
+          animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else if(whichAnimationTime == 3){
+		   //Slide in from top
+		  GRect start = GRect(0, -70, 140, 168);
+          GRect finish = GRect(0, 53, 140, 168);
+          animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		else{
+			//Slide in diagonally
+		  GRect start = GRect(-100, -100, 140, 168);
+          GRect finish = GRect(0, 53, 140, 168);
+          animate_layer(text_layer_get_layer(text_layer), &start, &finish, 500, 800);
+		}
+		/*
+		GRect start = GRect(300, 250, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(-300, 250, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(300,-250, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(-300, -250, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+		*/
         }
         
     else
@@ -93,18 +187,21 @@ void tick_handler(struct tm *tick_time, TimeUnits units_changed)
           text_layer_set_text(text_layer, timeBuffer);
         }
 }
- 
+
 void handle_bt(bool connected){
+	if(connected == 0){
+  	GRect start3 = GRect(115, -50, 40, 40);
+  	GRect finish3 = GRect(115, 135, 40, 40);
+  	animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1000, 0);
+  	bt_connected = gbitmap_create_with_resource(RESOURCE_ID_bt_disconnected);  
+  }
   if(connected == 1){
-  bt_connected = gbitmap_create_with_resource(RESOURCE_ID_bt_connected);
-  bitmap_layer_set_bitmap(bt_connected_layer,bt_connected);
+	GRect start3 = GRect(115, -50, 40, 40);
+  	GRect finish3 = GRect(115, 135, 40, 40);
+  	animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1000, 0);
+  	bt_connected = gbitmap_create_with_resource(RESOURCE_ID_bt_connected);
   }
-
-  else{
-  bt_connected = gbitmap_create_with_resource(RESOURCE_ID_bt_disconnected);
-  bitmap_layer_set_bitmap(bt_connected_layer,bt_connected);
-  }
-
+	bitmap_layer_set_bitmap(bt_connected_layer,bt_connected);
 }
 
 void handle_battery(BatteryChargeState charge_state) {
@@ -130,12 +227,13 @@ void window_load(Window *window)
   text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));    
   layer_add_child(window_get_root_layer(window), (Layer*) text_layer);
 	
-  //Date layer (work in progress)
+  //Date layer
   date_text_layer = text_layer_create(GRect(25,97,150,140));
   text_layer_set_font(date_text_layer,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   text_layer_set_background_color(date_text_layer, GColorClear);
   text_layer_set_text_color(date_text_layer, GColorBlack);
   layer_add_child(window_layer, text_layer_get_layer(date_text_layer));
+
 	
   //Battery text layer
   battery_text_layer = text_layer_create(GRect(0,145,40,40));
@@ -149,6 +247,13 @@ void window_load(Window *window)
   bt_connected_layer = bitmap_layer_create(GRect(115,135,40,40));
   bitmap_layer_set_background_color(bt_connected_layer,GColorClear);
   layer_add_child(window_layer,bitmap_layer_get_layer(bt_connected_layer));
+	
+  //Invert all pixels
+  //Will now be white on black
+  //To make black on white remove these lines
+  invert_layer = inverter_layer_create(GRect(0, 0, 144, 168));
+  layer_add_child(window_get_root_layer(window), (Layer*) invert_layer);
+	
 	
   //Get a time structure so that it doesn't start blank
   struct tm *t;
@@ -177,6 +282,7 @@ void window_unload(Window *window)
   text_layer_destroy(battery_text_layer);
   fonts_unload_custom_font(trek20);
   bitmap_layer_destroy(bt_connected_layer);
+  inverter_layer_destroy(invert_layer);
   gbitmap_destroy(bt_connected);
 }
  
@@ -194,11 +300,105 @@ void init()
   window_stack_push(window, true);
   bluetooth_connection_service_subscribe(&handle_bt);
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
+  num_animation = persist_exists(NUM_ANIMATION_PKEY) ? persist_read_int(NUM_ANIMATION_PKEY) : NUM_ANIMATION_DEFAULT;
+	//This is the old method of fetching an animation number
+	//Now it goes in order
+	
+	//srand(time(NULL));
+    //int whichAnimation;
+	//whichAnimation = (rand() % 5);
+	
+	if(num_animation > 5){
+		num_animation = NUM_ANIMATION_DEFAULT;
+	}
+	
+	if(num_animation == 1){
+		//Slide in from bottom
+		GRect start = GRect(0, 600, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(25, 600, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(0, 600, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(115, 600, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+	}
+	
+	if(num_animation == 2){
+		//Slide in from top
+		GRect start = GRect(0, -600, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(25, -600, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(0, -600, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(115, -600, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+	}
+	//Mixed
+
+	if(num_animation == 3){
+	//Condensed point slide in and expand from left
+		GRect start = GRect(-250, 0, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(-200, 0, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(-200, 0, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(-200, 0, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+	}
+	if(num_animation == 4){
+	//Condensed point slide in and expand from right
+		GRect start = GRect(300, 0, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(300, 0, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(300, 0, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(300, 0, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+	}
+	
+	if(num_animation == 5){
+		GRect start = GRect(300, 250, 140, 168);
+  		GRect finish = GRect(0, 53, 140, 168);
+  		GRect start1 = GRect(-300, 250, 140, 168);
+  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start2 = GRect(300,-250, 40, 40);
+ 		GRect finish2 = GRect(0, 145, 40, 40);
+ 		GRect start3 = GRect(-300, -250, 40, 40);
+  		GRect finish3 = GRect(115, 135, 40, 40);
+		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
+  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
+  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
+  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
+	}
+	num_animation++;
 }
  
 void deinit()
 {
   //De-initialize elements, saves memory
+  //Write the last animation to storage
+  persist_write_int(NUM_ANIMATION_PKEY, num_animation);
+  animation_unschedule_all();
   tick_timer_service_unsubscribe();
   battery_state_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
