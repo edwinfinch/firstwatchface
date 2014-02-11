@@ -12,10 +12,7 @@ Trek font taken from PebbleTrek by Kyle Potts: https://github.com/kylepotts/pebb
 #define NUM_ANIMATION_DEFAULT 1
 	
 Window* window;
-TextLayer *text_layer;
-TextLayer *battery_text_layer;
-TextLayer* date_text_layer;
-TextLayer *update_at_a_glance;
+TextLayer *text_layer, *battery_text_layer, *date_text_layer, *update_at_a_glance;
 InverterLayer *invert_layer;
 static GFont trek20;
 
@@ -32,6 +29,17 @@ int animationNumber = 0;
 //Define our variables for persistent storage
 static int num_animation = NUM_ANIMATION_PKEY;
 //This is an int and not a bool because I'll be adding more colourschemes
+
+static TextLayer* textLayerInit(GRect location, GColor colour, GColor background, const char *res_id, GTextAlignment alignment)
+{
+	TextLayer *layer = text_layer_create(location);
+	text_layer_set_text_color(layer, colour);
+	text_layer_set_background_color(layer, background);
+	text_layer_set_font(layer, fonts_get_system_font(res_id));
+	text_layer_set_text_alignment(layer, alignment);
+
+	return layer;
+}
 
 void on_animation_stopped(Animation *anim, bool finished, void *context)
 {
@@ -237,42 +245,29 @@ void window_load(Window *window)
   layer_add_child(window_layer,bitmap_layer_get_layer(bt_connected_layer));
 	
   //Time layer
-  text_layer = text_layer_create(GRect(0, 53, 140, 168));
-  text_layer_set_background_color(text_layer, GColorClear);
-  text_layer_set_text_color(text_layer, GColorBlack);
-  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
-  text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));    
+  //GRect location, GColor colour, GColor background, const char *res_id, GTextAlignment alignment
+  text_layer = textLayerInit(GRect(0, 53, 140, 168), GColorBlack, GColorClear, FONT_KEY_BITHAM_42_MEDIUM_NUMBERS, GTextAlignmentCenter);
   layer_add_child(window_get_root_layer(window), (Layer*) text_layer);
 	
   //Quick update text layer
-  update_at_a_glance = text_layer_create(GRect(0, -50, 140, 168));
-  text_layer_set_background_color(update_at_a_glance, GColorClear);
-  text_layer_set_text_color(update_at_a_glance, GColorBlack);
-  text_layer_set_font(update_at_a_glance, fonts_get_system_font(FONT_KEY_GOTHIC_18));
+  update_at_a_glance = textLayerInit(GRect(0, -50, 140, 168), GColorBlack, GColorClear, FONT_KEY_GOTHIC_18, GTextAlignmentCenter);
   layer_add_child(window_layer, (Layer*) update_at_a_glance);
 	
 	
   //Date layer
-  date_text_layer = text_layer_create(GRect(25,97,150,140));
-  text_layer_set_font(date_text_layer,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
-  text_layer_set_background_color(date_text_layer, GColorClear);
-  text_layer_set_text_color(date_text_layer, GColorBlack);
+  date_text_layer = textLayerInit(GRect(25, 97, 140, 140), GColorBlack, GColorClear, FONT_KEY_ROBOTO_CONDENSED_21, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(date_text_layer));
-
-
 	
   //Battery text layer
-  battery_text_layer = text_layer_create(GRect(0,145,40,40));
+  battery_text_layer = textLayerInit(GRect(0, 145, 40, 40), GColorBlack, GColorClear, FONT_KEY_ROBOTO_CONDENSED_21, GTextAlignmentCenter);	
   text_layer_set_font(battery_text_layer,trek20);
-  text_layer_set_background_color(battery_text_layer, GColorClear);
-  text_layer_set_text_color(battery_text_layer, GColorBlack);
   layer_add_child(window_layer, text_layer_get_layer(battery_text_layer));
 	
   //Invert all pixels
   //Will now be white on black
   //To make black on white remove these lines
-  invert_layer = inverter_layer_create(GRect(0, 0, 144, 168));
-  layer_add_child(window_get_root_layer(window), (Layer*) invert_layer);
+  //invert_layer = inverter_layer_create(GRect(0, 0, 144, 168));
+ // layer_add_child(window_layer, (Layer*) invert_layer);
 	
 	
   //Get a time structure so that it doesn't start blank
@@ -334,7 +329,7 @@ void init()
 		GRect start = GRect(0, 600, 140, 168);
   		GRect finish = GRect(0, 53, 140, 168);
   		GRect start1 = GRect(25, 600, 140, 168);
-  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect finish1 = GRect(0, 97, 150, 140);
   		GRect start2 = GRect(0, 600, 40, 40);
  		GRect finish2 = GRect(0, 145, 40, 40);
  		GRect start3 = GRect(115, 600, 40, 40);
@@ -349,8 +344,8 @@ void init()
 		//Slide in from top
 		GRect start = GRect(0, -600, 140, 168);
   		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(25, -600, 140, 168);
-  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect start1 = GRect(0, -600, 140, 168);
+  		GRect finish1 = GRect(0, 97, 150, 140);
   		GRect start2 = GRect(0, -600, 40, 40);
  		GRect finish2 = GRect(0, 145, 40, 40);
  		GRect start3 = GRect(115, -600, 40, 40);
@@ -367,7 +362,7 @@ void init()
 		GRect start = GRect(-250, 0, 140, 168);
   		GRect finish = GRect(0, 53, 140, 168);
   		GRect start1 = GRect(-200, 0, 140, 168);
-  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect finish1 = GRect(0, 97, 150, 140);
   		GRect start2 = GRect(-200, 0, 40, 40);
  		GRect finish2 = GRect(0, 145, 40, 40);
  		GRect start3 = GRect(-200, 0, 40, 40);
@@ -382,7 +377,7 @@ void init()
 		GRect start = GRect(300, 0, 140, 168);
   		GRect finish = GRect(0, 53, 140, 168);
   		GRect start1 = GRect(300, 0, 140, 168);
-  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect finish1 = GRect(0, 97, 150, 140);
   		GRect start2 = GRect(300, 0, 40, 40);
  		GRect finish2 = GRect(0, 145, 40, 40);
  		GRect start3 = GRect(300, 0, 40, 40);
@@ -396,7 +391,7 @@ void init()
 		GRect start = GRect(300, 250, 140, 168);
   		GRect finish = GRect(0, 53, 140, 168);
   		GRect start1 = GRect(-300, 250, 140, 168);
-  		GRect finish1 = GRect(25, 97, 150, 140);
+  		GRect finish1 = GRect(0, 97, 150, 140);
   		GRect start2 = GRect(300,-250, 40, 40);
  		GRect finish2 = GRect(0, 145, 40, 40);
  		GRect start3 = GRect(-300, -250, 40, 40);
