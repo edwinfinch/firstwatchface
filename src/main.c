@@ -240,7 +240,7 @@ void window_load(Window *window)
 	
   //Bluetooth layer
   bt_connected = gbitmap_create_with_resource(RESOURCE_ID_bt_disconnected);
-  bt_connected_layer = bitmap_layer_create(GRect(115,135,40,40));
+  bt_connected_layer = bitmap_layer_create(GRect(110,-5,40,40)); //old value of Y is 135
   bitmap_layer_set_background_color(bt_connected_layer,GColorClear);
   layer_add_child(window_layer,bitmap_layer_get_layer(bt_connected_layer));
 	
@@ -259,15 +259,17 @@ void window_load(Window *window)
   layer_add_child(window_layer, text_layer_get_layer(date_text_layer));
 	
   //Battery text layer
-  battery_text_layer = textLayerInit(GRect(0, 145, 40, 40), GColorBlack, GColorClear, FONT_KEY_ROBOTO_CONDENSED_21, GTextAlignmentCenter);	
+  battery_text_layer = textLayerInit(GRect(0, 5, 40, 40), GColorBlack, GColorClear, FONT_KEY_ROBOTO_CONDENSED_21, GTextAlignmentCenter); //old value of Y is 145	
   text_layer_set_font(battery_text_layer,trek20);
   layer_add_child(window_layer, text_layer_get_layer(battery_text_layer));
 	
   //Invert all pixels
   //Will now be white on black
   //To make black on white remove these lines
-  //invert_layer = inverter_layer_create(GRect(0, 0, 144, 168));
- // layer_add_child(window_layer, (Layer*) invert_layer);
+  
+  invert_layer = inverter_layer_create(GRect(0, 0, 144, 168));
+  layer_add_child(window_layer, (Layer*) invert_layer);
+  
 	
 	
   //Get a time structure so that it doesn't start blank
@@ -315,92 +317,68 @@ void init()
   battery_state_service_subscribe(&handle_battery);
   window_stack_push(window, true);
   bluetooth_connection_service_subscribe(&handle_bt);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
   num_animation = persist_exists(NUM_ANIMATION_PKEY) ? persist_read_int(NUM_ANIMATION_PKEY) : NUM_ANIMATION_DEFAULT;
 	//This is the old method of fetching an animation number
 	//Now it goes in order
-	
-	if(num_animation > 5){
-		num_animation = 1;
-	}
-	
-	if(num_animation == 1){
-		//Slide in from bottom
-		GRect start = GRect(0, 600, 140, 168);
-  		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(25, 600, 140, 168);
-  		GRect finish1 = GRect(0, 97, 150, 140);
-  		GRect start2 = GRect(0, 600, 40, 40);
- 		GRect finish2 = GRect(0, 145, 40, 40);
- 		GRect start3 = GRect(115, 600, 40, 40);
-  		GRect finish3 = GRect(115, 135, 40, 40);
-		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
-  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
-  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
-  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
-	}
-	
-	if(num_animation == 2){
-		//Slide in from top
-		GRect start = GRect(0, -600, 140, 168);
-  		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(0, -600, 140, 168);
-  		GRect finish1 = GRect(0, 97, 150, 140);
-  		GRect start2 = GRect(0, -600, 40, 40);
- 		GRect finish2 = GRect(0, 145, 40, 40);
- 		GRect start3 = GRect(115, -600, 40, 40);
-  		GRect finish3 = GRect(115, 135, 40, 40);
-		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
-  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
-  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
-  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
-	}
-	//Mixed
-
-	if(num_animation == 3){
-	//Condensed point slide in and expand from left
-		GRect start = GRect(-250, 0, 140, 168);
-  		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(-200, 0, 140, 168);
-  		GRect finish1 = GRect(0, 97, 150, 140);
-  		GRect start2 = GRect(-200, 0, 40, 40);
- 		GRect finish2 = GRect(0, 145, 40, 40);
- 		GRect start3 = GRect(-200, 0, 40, 40);
-  		GRect finish3 = GRect(115, 135, 40, 40);
-		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
-  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
-  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
-  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
-	}
-	if(num_animation == 4){
-	//Condensed point slide in and expand from right
-		GRect start = GRect(300, 0, 140, 168);
-  		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(300, 0, 140, 168);
-  		GRect finish1 = GRect(0, 97, 150, 140);
-  		GRect start2 = GRect(300, 0, 40, 40);
- 		GRect finish2 = GRect(0, 145, 40, 40);
- 		GRect start3 = GRect(300, 0, 40, 40);
-  		GRect finish3 = GRect(115, 135, 40, 40);
-		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
-  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
-  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
-  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
-	}
-	if(num_animation == 5){
-		GRect start = GRect(300, 250, 140, 168);
-  		GRect finish = GRect(0, 53, 140, 168);
-  		GRect start1 = GRect(-300, 250, 140, 168);
-  		GRect finish1 = GRect(0, 97, 150, 140);
-  		GRect start2 = GRect(300,-250, 40, 40);
- 		GRect finish2 = GRect(0, 145, 40, 40);
- 		GRect start3 = GRect(-300, -250, 40, 40);
-  		GRect finish3 = GRect(115, 135, 40, 40);
-		animate_layer(text_layer_get_layer(text_layer), &start, &finish, 1200, 10);
-  		animate_layer(text_layer_get_layer(date_text_layer), &start1, &finish1, 1130, 10);
-  		animate_layer(text_layer_get_layer(battery_text_layer), &start2, &finish2, 1300, 10);
-  		animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start3, &finish3, 1400, 10);
-	}
+    if(num_animation > 5)
+        num_animation = 1;        
+    {
+        GRect start_text,
+			start_bt,
+			start_date,
+			start_batt,
+			finish_text = GRect(0, 53, 140, 168),
+			finish_date = GRect(0, 97, 150, 140),
+			finish_batt = GRect(0, 5, 40, 40),
+			finish_bt = GRect(110,-5,40,40);
+        switch(num_animation){
+        	case 1:{
+        		//Slide in from bottom
+        		start_text = GRect(0, 600, 140, 168);
+          		start_date = GRect(25, 600, 140, 168);
+          		start_batt = GRect(0, 600, 40, 40);
+         		start_bt = GRect(115, 600, 40, 40);
+                break;
+        	}
+        	case 2:{
+        		//Slide in from top
+        		start_text = GRect(0, -600, 140, 168);
+          		start_date = GRect(0, -600, 140, 168);
+          		start_batt = GRect(0, -600, 40, 40);
+         		start_bt = GRect(115, -600, 40, 40);
+                break;
+        	}
+        	//Mixed
+        	case 3:{
+        	//Condensed point slide in and expand from left
+        		start_text = GRect(-250, 0, 140, 168);
+          		start_date = GRect(-200, 0, 140, 168);
+          		start_batt = GRect(-200, 0, 40, 40);
+         		start_bt = GRect(-200, 0, 40, 40);
+                break;
+        	}
+        	case 4:{
+        	//Condensed point slide in and expand from right
+        		start_text = GRect(300, 0, 140, 168);
+          		start_date = GRect(300, 0, 140, 168);
+          		start_batt = GRect(300, 0, 40, 40);
+         		start_bt = GRect(300, 0, 40, 40);
+                break;
+        	}
+        	case 5:{
+        		start_text = GRect(300, 250, 140, 168);
+          		start_date = GRect(-300, 250, 140, 168);
+          		start_batt = GRect(300,-250, 40, 40);
+         		start_bt = GRect(-300, -250, 40, 40);
+                break;
+        	}
+        }
+        animate_layer(text_layer_get_layer(text_layer), &start_text, &finish_text, 1200, 10);
+        animate_layer(text_layer_get_layer(date_text_layer), &start_date, &finish_date, 1130, 10);
+        animate_layer(text_layer_get_layer(battery_text_layer), &start_batt, &finish_batt, 1300, 10);
+        animate_layer(bitmap_layer_get_layer(bt_connected_layer), &start_bt, &finish_bt, 1400, 10);
+    }
 	num_animation++;
 }
  
