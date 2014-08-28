@@ -1,40 +1,41 @@
 {
-    "versionLabel": "1.1.1",
-    "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
     "appKeys": {},
-    "longName": "Clean with Date",
-    "versionCode": 16,
     "capabilities": [
         ""
     ],
-    "shortName": "Clean",
-    "companyName": "edwin",
-    "watchapp": {
-        "watchface": true
-    },
+    "companyName": "Edwin Finch",
+    "longName": "Clean with Date",
+    "projectType": "native",
     "resources": {
         "media": [
             {
-                "type": "png",
-                "name": "bt_disconnected",
-                "file": "images/bt_disconnected.png"
-            },
-            {
-                "type": "png",
-                "name": "bt_connected",
-                "file": "images/bt_connected.png"
-            },
-            {
-                "type": "font",
-                "name": "trekfont_20",
-                "file": "fonts/trek.ttf"
-            },
-            {
+                "file": "images/menu_icon.png",
                 "menuIcon": true,
-                "type": "png",
                 "name": "MENU_ICON",
-                "file": "images/menu_icon.png"
+                "type": "png"
+            },
+            {
+                "file": "fonts/trek.ttf",
+                "name": "trekfont_20",
+                "type": "font"
+            },
+            {
+                "file": "images/bt_connected.png",
+                "name": "bt_connected",
+                "type": "png"
+            },
+            {
+                "file": "images/bt_disconnected.png",
+                "name": "bt_disconnected",
+                "type": "png"
             }
         ]
+    },
+    "shortName": "Clean",
+    "uuid": "24af3233-6c0c-4790-ac60-fac2b0edfdfe",
+    "versionCode": 16,
+    "versionLabel": "1.1",
+    "watchapp": {
+        "watchface": true
     }
 }
